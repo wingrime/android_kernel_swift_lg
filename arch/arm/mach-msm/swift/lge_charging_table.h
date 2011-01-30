@@ -3,7 +3,7 @@ struct charging_table {
 	u32 capacity;
 };
 
-/* static struct charging_table tbl[101] = {
+ static struct charging_table tbl[101] = {
 	
 	{	3200,
 		0,
@@ -407,7 +407,7 @@ struct charging_table {
 	{
 		4199,
 		100,
-	},*/
-
+	},
+ };
 
 
