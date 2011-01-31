@@ -105,13 +105,6 @@
 #include <asm/system.h>
 #include <linux/uaccess.h>
 
-#define FB_MAX 32
-extern struct fb_info *registered_fb[FB_MAX];
-#define	LGE_ERROR_MAX_ROW	30
-#define	LGE_ERROR_MAX_COLUMN	40
-extern void fbcon_putcs_byLGE(struct vc_data *vc, const unsigned short *s,int count, int ypos, int xpos);
-extern void fbcon_update_byLGE(struct vc_data *vc);
-
 #define MAX_NR_CON_DRIVER 16
 
 #define CON_DRIVER_FLAG_MODULE 1
@@ -329,41 +322,6 @@ static void scrdown(struct vc_data *vc, unsigned int t, unsigned int b, int nr)
 	scr_memsetw(s, vc->vc_video_erase_char, 2 * step);
 }
 
-void display_errorinfo_byLGE(int crash_side, unsigned short * buf, int count)
-{
-	extern void expand_char_to_shrt(char * message,unsigned short *buffer);
-	extern int msm_fb_refesh_enabled;
-	struct vc_data *vc;
-	vc = vc_cons[0].d;
-	struct fb_info *info = registered_fb[vc->vc_num];
-	int i; 
-	unsigned char  * temp;
-	unsigned short * temp2 = buf;
-//	unsigned short * temp1 =  kmalloc(100*sizeof(short), GFP_KERNEL);
-
-
-#if 1
-	//print error_info
-	if(!crash_side) {
-		fbcon_putcs_byLGE (vc,"[ B l u e   E r r o r   H a n d l e r ]   A r m 9   i s   C r a s h e d ! !   ",LGE_ERROR_MAX_COLUMN,0,0);
-	} else { 
-		fbcon_putcs_byLGE (vc,"[ B l u e   E r r o r   H a n d l e r ]   A r m 1 1   i s   C r a s h e d ! ! ",LGE_ERROR_MAX_COLUMN,0,0);
-	}
-	fbcon_putcs_byLGE(vc,"[ P r e s s   V o l u m e   u p   k e y ]   R e b o o t & s a v e l o g! !        ", LGE_ERROR_MAX_COLUMN,1,0);
-	fbcon_putcs_byLGE(vc,"[ P r e s s   V o l u m e   d o w n  k e y ]   R e b o o t & s a v e l o g ! !   ",LGE_ERROR_MAX_COLUMN,2,0);
-#endif
-#if 1
-	temp2+=LGE_ERROR_MAX_COLUMN;
-
-	
-	for (i=0; i< LGE_ERROR_MAX_ROW-1; i++) {
-			fbcon_putcs_byLGE(vc, temp2, LGE_ERROR_MAX_COLUMN , i+3,0);
-			temp2 += LGE_ERROR_MAX_COLUMN;
-		}
-	fbcon_update_byLGE(vc);
-	msm_fb_refesh_enabled=0;
-#endif
-}
 static void do_update_region(struct vc_data *vc, unsigned long start, int count)
 {
 #ifndef VT_BUF_VRAM_ONLY

@@ -94,7 +94,6 @@ extern u32 msm_fb_debug_enabled;
 extern struct workqueue_struct *mdp_dma_wq;
 
 int vsync_start_y_adjust = 4;
-extern int LG_ErrorHandler_enable;
 extern int mddi_ss_driveric_innotek_position(void);
 static void mdp_dma2_update_lcd(struct msm_fb_data_type *mfd)
 {
@@ -557,9 +556,6 @@ void mdp_dma_pan_update(struct fb_info *info)
 		/* waiting for this update to complete */
 		mfd->pan_waiting = TRUE;
 		wait_for_completion_killable(&mfd->pan_comp);
-		if(LG_ErrorHandler_enable){
-			mfd->dma_fnc(mfd);
-		}
 	} else
 		mfd->dma_fnc(mfd);
 }

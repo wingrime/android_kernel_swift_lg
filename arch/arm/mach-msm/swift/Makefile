@@ -15,7 +15,6 @@ obj-y += board-swift-ec-ak8973.o
 obj-$(CONFIG_SWIFT_BATTERY_STUB) += lge_battery_stub.o
 obj-$(CONFIG_FB_MSM_MDDI_SWIFT_PANEL) += board-swift-ss-driveric-panel.o
 obj-$(CONFIG_FB_MSM_MDDI_SWIFT_PANEL) += mddi_ss_driveric_innotek.o
-obj-y += lge_errorhandler.o
 obj-y += board-swift-headset.o
 obj-y += board-swift-msm-touch.o 
 #obj-y += board-swift-msm-ts.o
