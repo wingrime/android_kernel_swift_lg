@@ -30,9 +30,6 @@ void vibrator_enable(void);
 int is_vib_state(void);
 void vibrator_set(int value);
 
-int at_gkpd_cfg( unsigned int type, int value );
-void write_gkpd_value( int value );
-int at_fkpd_cfg ( unsigned int type, int value);
 
 enum {
 ATCMD_DUMMY1,	

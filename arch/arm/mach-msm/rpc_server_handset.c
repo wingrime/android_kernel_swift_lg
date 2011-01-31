@@ -241,7 +241,6 @@ static void report_hs_key(uint32_t key_code, uint32_t key_parm)
 	case KEY_END:
 		if ((key_code != HS_REL_K)) {
 			disable_irq(102);
-			write_gkpd_value(80);
 		} else {
 			enable_irq(102);
 		}
@@ -264,12 +263,9 @@ static void report_hs_key(uint32_t key_code, uint32_t key_parm)
 				return;
 			}
 			printk(KERN_INFO "HOOK OK!!!!!!\n");
-			//write_gkpd_value(72);
 //			input_report_key(hs->ipdev, key, 0);//(key_code != HS_REL_K));
 
 			if ((key_code != HS_REL_K))
-				write_gkpd_value(72);
-
 			input_report_key(hs->ipdev, key, (key_code != HS_REL_K));
 			//input_sync(hs->ipdev);
 		}

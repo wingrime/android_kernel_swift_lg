@@ -152,32 +152,6 @@ static void report_key(struct gpio_kp *kp, int key_index, int out, int in)
 					out, in, mi->output_gpios[out],
 					mi->input_gpios[in], pressed);
 
-			if (pressed == 1) {
-				switch (keycode) {
-				case 115:	/* VOLUME UP */ 
-					write_gkpd_value(85);
-					break;	
-				case 114:   /* VOLUME DOWN */ 
-					write_gkpd_value(68);
-					break;	
-				case 231:   /* SEND */ 
-					write_gkpd_value(83);
-					break;	
-				case 139:   /* MENU */ 
-					write_gkpd_value(77);
-					break;	
-				case 217:   /* SEARCH */ 
-					write_gkpd_value(65);
-					break;	
-				case 242:   /* FOCUS */ 
-					write_gkpd_value(70);
-					break;	
-				case 212:   /* CAMERA */ 
-					write_gkpd_value(67);
-					break;	
-				}
-			}
-
 			input_report_key(kp->input_devs->dev[dev], keycode, pressed);
 		}
 	}

@@ -46,7 +46,7 @@ static struct wake_lock rpc_servers_wake_lock;
 static struct msm_rpc_xdr server_xdr;
 static uint32_t current_xid;
 
-#if 0 //def CONFIG_MACH_LGE
+
 // change little Endian to Big endian (there is not change function in Kernel)
 char cpu_to_be8_AT(char value)
 {
@@ -73,7 +73,6 @@ char cpu_to_be8_AT(char value)
 #endif
 	return c_value;
 }
-#endif
 
 static void rpc_server_register(struct msm_rpc_server *server)
 {
