@@ -1099,9 +1099,6 @@ static struct platform_device msm_camera_sensor_isx005 = {
 };
 #endif
 
-static struct platform_device ers_kernel = {
-	.name = "ers-kernel",
-};
 
 static struct platform_device rt9393_bl = {
 	.name = "rt9393-bl",
@@ -1203,7 +1200,6 @@ static struct platform_device *devices[] __initdata = {
 #ifdef CONFIG_ISX005
 	&msm_camera_sensor_isx005,
 #endif
-	&ers_kernel,
 	&rt9393_bl,
 	&mddi_ss_driveric_device,	
 	&eve_atcmd_device, //vlc	
