@@ -30,5 +30,3 @@ msm_tsif-objs := tsif.o
 
 obj-$(CONFIG_TSIF_CHRDEV) += tsif_chrdev.o
 obj-$(CONFIG_PMIC8058_PWM) += pmic8058-pwm.o
-obj-$(CONFIG_MACH_MSM7X27_SWIFT)      	+= eve_at_class.o
-obj-$(CONFIG_MACH_MSM7X27_SWIFT)      	+= eve_at.o

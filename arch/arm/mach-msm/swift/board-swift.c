@@ -53,7 +53,6 @@
 #include <linux/android_pmem.h>
 #include <mach/camera.h>
 
-#include <linux/eve_at.h>
 
 #ifdef CONFIG_BATTERY_MSM
 #include <linux/power_supply.h>
@@ -658,19 +657,6 @@ static struct platform_device lge_battery = {
 	.name = "lge-battery",
 };
 #endif
-
-static struct atcmd_platform_data eve_atcmd_pdata = {
-	.name = "eve_atcmd",
-};
-
-static struct platform_device eve_atcmd_device = {
-	.name = "eve_atcmd",
-	.id = -1,
-	.dev    = {
-		.platform_data = &eve_atcmd_pdata
-	},
-}; 
-
 #ifdef CONFIG_BATTERY_MSM
 static u32 msm_calculate_batt_capacity(u32 current_voltage);
 u32 calculate_capacity(u32 v);
@@ -1201,8 +1187,7 @@ static struct platform_device *devices[] __initdata = {
 	&msm_camera_sensor_isx005,
 #endif
 	&rt9393_bl,
-	&mddi_ss_driveric_device,	
-	&eve_atcmd_device, //vlc	
+	&mddi_ss_driveric_device,		
 };
 
 static struct msm_panel_common_pdata mdp_pdata = {

@@ -20,7 +20,6 @@
 #include <../../../drivers/staging/android/timed_output.h>
 #include <linux/syscalls.h>
 #include <linux/fcntl.h>
-#include <linux/eve_at.h>
 #include <linux/at_kpd_eve.h>
 #include <linux/input.h>
 /* Misc server definitions. */
