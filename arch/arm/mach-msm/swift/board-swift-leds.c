@@ -29,16 +29,16 @@ keypad LED
 ******************************/
 #define MAX_BACKLIGHT_LEVEL	16
 
-void g_bl_led_set(void)
+void swift_turn_off_led(void)
 {
 	int ret;
 
 	ret = pmic_set_led_intensity(LED_KEYPAD, 0);
 	if (ret)
-		printk(KERN_INFO "can't set keypad backlight\n");	
+		printk(KERN_INFO "Can't turn of led\n");	
 }
 
-static void msm_keypad_bl_led_set(struct led_classdev *led_cdev,
+static void swift_keypad_bl_led_set(struct led_classdev *led_cdev,
 	enum led_brightness value)
 {
 	int ret;
@@ -48,78 +48,80 @@ static void msm_keypad_bl_led_set(struct led_classdev *led_cdev,
 		dev_err(led_cdev->dev, "can't set keypad backlight\n");
 }
 
-static struct led_classdev msm_kp_bl_led = {
+static struct led_classdev swift_kp_bl_led = {
 	.name			= "button-backlight",
-	.brightness_set		= msm_keypad_bl_led_set,
+	.brightness_set		= swift_keypad_bl_led_set,
 	.brightness		= LED_OFF,
 };
 
-static int msm_pmic_led0_probe(struct platform_device *pdev)
+
+
+static int swift_led_probe(struct platform_device *pdev)
 {
 	int rc;
 
-	rc = led_classdev_register(&pdev->dev, &msm_kp_bl_led);
+	rc = led_classdev_register(&pdev->dev, &swift_kp_bl_led);
 	if (rc) {
 		dev_err(&pdev->dev, "unable to register led class driver\n");
 		return rc;
 	}
-	msm_keypad_bl_led_set(&msm_kp_bl_led, LED_OFF);
+	swift_keypad_bl_led_set(&swift_kp_bl_led, LED_OFF);
 	return rc;
 }
 
-static int __devexit msm_pmic_led0_remove(struct platform_device *pdev)
+static int __devexit swift_led_remove(struct platform_device *pdev)
 {
-	led_classdev_unregister(&msm_kp_bl_led);
+	led_classdev_unregister(&swift_kp_bl_led);
 
 	return 0;
 }
 
 #ifdef CONFIG_PM
-static int msm_pmic_led0_suspend(struct platform_device *dev,
+static int swift_led_suspend(struct platform_device *dev,
 		pm_message_t state)
 {
-	led_classdev_suspend(&msm_kp_bl_led);
+	led_classdev_suspend(&swift_kp_bl_led);
 
 	return 0;
 }
 
-static int msm_pmic_led0_resume(struct platform_device *dev)
+static int swift_led_resume(struct platform_device *dev)
 {
-	led_classdev_resume(&msm_kp_bl_led);
+	led_classdev_resume(&swift_kp_bl_led);
 
 	return 0;
 }
 #else
-#define msm_pmic_led0_suspend NULL
-#define msm_pmic_led0_resume NULL
+#define swift_led_suspend NULL
+#define swift_led_resume NULL
 #endif
 
-static struct platform_driver msm_pmic_led0_driver = {
-	.probe		= msm_pmic_led0_probe,
-	.remove		= __devexit_p(msm_pmic_led0_remove),
-	.suspend	= msm_pmic_led0_suspend,
-	.resume		= msm_pmic_led0_resume,
+static struct platform_driver swift_led_driver = {
+	.probe		= swift_led_probe,
+	.remove		= __devexit_p(swift_led_remove),
+	.suspend	= swift_led_suspend,
+	.resume		= swift_led_resume,
 	.driver		= {
-		.name	= "pmic-led0",
+		.name	= "swift-led",
 		.owner	= THIS_MODULE,
 	},
 };
 
-static int __init msm_pmic_led0_init(void)
+static int __init swift_led_init(void)
 {
-	return platform_driver_register(&msm_pmic_led0_driver);
+	return platform_driver_register(&swift_led_driver);
 }
-module_init(msm_pmic_led0_init);
+module_init(swift_led_init);
 
-static void __exit msm_pmic_led0_exit(void)
+static void __exit swift_led_exit(void)
 {
-	platform_driver_unregister(&msm_pmic_led0_driver);
+	platform_driver_unregister(&swift_led_driver);
 }
-module_exit(msm_pmic_led0_exit);
+module_exit(swift_led_exit);
 
 
 
 
-MODULE_DESCRIPTION("MSM PMIC LEDs driver");
+MODULE_DESCRIPTION("Swift LEDs driver");
 MODULE_LICENSE("GPL v2");
 MODULE_ALIAS("platform:pmic-leds");

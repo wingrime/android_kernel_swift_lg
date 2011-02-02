@@ -480,8 +480,8 @@ static struct platform_device android_pmem_kernel_ebi1_device = {
 	.dev = { .platform_data = &android_pmem_kernel_ebi1_pdata },
 };
 
-static struct platform_device swift_pmic_keyled = {
-	.name = "pmic-led0",
+static struct platform_device swift_keyled = {
+	.name = "swift-led",
 };
 
 #ifdef CONFIG_SWIFT_BATTERY_STUB
@@ -775,7 +775,7 @@ static struct platform_device *devices[] __initdata = {
 /* msm-handsetn platform deivce reigistration, kenobi */
    &hs_device,
     /* add swift specific devices at following lines*/
-	&swift_pmic_keyled,
+	&swift_keyled,
 
 #ifdef CONFIG_SWIFT_BATTERY_STUB
 	&lge_battery,

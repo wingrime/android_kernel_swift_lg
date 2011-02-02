@@ -65,7 +65,7 @@ static unsigned short current_intensity = 0;
 static DEFINE_SPINLOCK(rt9393_lock);
 struct timer_list timerblbl;
 
-void g_bl_led_set(void);
+void swift_turn_off_led(void);
 
 static int rt9393_power_down(void)
 {
@@ -162,7 +162,7 @@ static int rt9393_send_intensity(struct backlight_device *bd)
 	spin_unlock(&rt9393_lock);
 
 	if (next_intensity == 0) 
-    	g_bl_led_set();
+	  swift_turn_off_led();
 
 	return 0;
 }
