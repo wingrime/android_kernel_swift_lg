@@ -295,7 +295,7 @@ static int timed_vibrator_get_time(struct timed_output_dev *tdev)
 		return 0;
 }
 
-void __init msm_init_timed_vibrator(void)
+void __init swift_init_timed_vibrator(void)
 {
 	int ret;
 	struct vibrator_device *vib_dev;

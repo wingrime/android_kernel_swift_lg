@@ -97,7 +97,7 @@ uint32_t g_fb_addr=0;
 
 //todo add headers 
 void map_zero_page_strongly_ordered(void);
-void __init msm_init_timed_vibrator(void);
+void __init swift_init_timed_vibrator(void);
 
 #ifdef CONFIG_USB_FUNCTION
 static struct usb_mass_storage_platform_data usb_mass_storage_pdata = {
@@ -1260,7 +1260,7 @@ static void __init swift_init(void)
 	swift_init_gpio_i2c_devices();
 
 	/* initialize timed_output vibrator */
-	msm_init_timed_vibrator();
+	swift_init_timed_vibrator();
 }
 
 static unsigned pmem_kernel_ebi1_size = PMEM_KERNEL_EBI1_SIZE;
