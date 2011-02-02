@@ -664,7 +664,7 @@ static struct platform_device ram_console_device = {
 };
 #endif
 
-static struct i2c_board_info i2c_devices[] = {
+static struct i2c_board_info swift_i2c_devices[] = {
 #ifdef CONFIG_ISX005
 	{
 		I2C_BOARD_INFO("isx005", 0x1A),
@@ -840,13 +840,10 @@ static struct platform_device *devices[] __initdata = {
 static struct mddi_platform_data mddi_pdata = {
 };
 
-static void __init msm_fb_add_devices(void)
+static void __init swift_add_fb_devices(void)
 {
         msm_fb_register_device("mdp", 0);
-//        msm_fb_register_device("ebi2", 0);
         msm_fb_register_device("pmdh", &mddi_pdata);
-//        msm_fb_register_device("emdh", 0);
-        //msm_fb_register_device("tvenc", &tvenc_pdata);
 }
 
 extern struct sys_timer msm_timer;
@@ -856,19 +853,19 @@ static void __init swift_init_irq(void)
 	msm_init_irq();
 }
 
-static struct msm_acpu_clock_platform_data msm7x27_clock_data = {
+static struct msm_acpu_clock_platform_data swift_clock_data = {
 	.acpu_switch_time_us = 50,
 	.max_speed_delta_khz = 256000,
 	.vdd_switch_time_us = 62,
 	.power_collapse_khz = 19200000,
 	.wait_for_irq_khz = 128000000,
-	.max_axi_khz = 128000,
+	.max_axi_khz = 200000,
 };
 
 void msm_serial_debug_init(unsigned int base, int irq,
 			   struct device *clk_device, int signal_irq);
 
-static void sdcc_gpio_init(void)
+static void swift_sdcc_gpio_init(void)
 {
 #ifdef CONFIG_MMC_MSM_CARD_HW_DETECTION
 	int rc = 0;
@@ -1001,7 +998,7 @@ static unsigned sdcc_cfg_data[][6] = {
 static unsigned long vreg_sts, gpio_sts;
 static struct vreg *vreg_mmc;
 
-static void msm_sdcc_setup_gpio(int dev_id, unsigned int enable)
+static void swift_sdcc_setup_gpio(int dev_id, unsigned int enable)
 {
 	int i, rc;
 
@@ -1028,7 +1025,7 @@ struct mmc_vdd_xlat {
 };
 
 
-static uint32_t msm_sdcc_setup_power(struct device *dv, unsigned int vdd)
+static uint32_t swift_sdcc_setup_power(struct device *dv, unsigned int vdd)
 {
 	int rc = 0;
 	struct platform_device *pdev;
@@ -1036,7 +1033,7 @@ static uint32_t msm_sdcc_setup_power(struct device *dv, unsigned int vdd)
 	unsigned cnt = 0;
 
 	pdev = container_of(dv, struct platform_device, dev);
-	msm_sdcc_setup_gpio(pdev->id, !!vdd);
+	swift_sdcc_setup_gpio(pdev->id, !!vdd);
 
 	printk(KERN_ERR "(%s)vdd :%x\n", __func__, vdd);
 
@@ -1092,7 +1089,7 @@ static unsigned int bcm432x_sdcc_wlan_slot_status(struct device *dev)
 
 static struct mmc_platform_data bcm432x_sdcc_wlan_data = {
     .ocr_mask   	= MMC_VDD_30_31,
-	.translate_vdd	= msm_sdcc_setup_power,
+	.translate_vdd	= swift_sdcc_setup_power,
     .status     	= bcm432x_sdcc_wlan_slot_status,
 	.status_irq 	= MSM_GPIO_TO_INT(CONFIG_BCM4325_GPIO_WL_RESET),
 
@@ -1110,7 +1107,7 @@ static struct mmc_platform_data bcm432x_sdcc_wlan_data = {
 static struct mmc_platform_data msm7x2x_sdcc_data = {
 #ifdef CONFIG_MMC_MSM_CARD_HW_DETECTION
 	.ocr_mask		= SWIFT_MMC_VDD,
-	.translate_vdd	= msm_sdcc_setup_power,
+	.translate_vdd	= swift_sdcc_setup_power,
 	.status 		= swift_sdcc_slot_status, 
 	.status_irq 	= MSM_GPIO_TO_INT(GPIO_MMC_CD_COVER),	
 
@@ -1118,7 +1115,7 @@ static struct mmc_platform_data msm7x2x_sdcc_data = {
 	.mmc_bus_width	= MMC_CAP_4_BIT_DATA,
 #else
 	.ocr_mask		= MMC_VDD_28_29,
-	.translate_vdd	= msm_sdcc_setup_power,
+	.translate_vdd	= swift_sdcc_setup_power,
 	.mmc_bus_width  = MMC_CAP_4_BIT_DATA,
 #endif	
 };
@@ -1133,7 +1130,7 @@ static void __init swift_init_mmc(void)
 		       __func__, PTR_ERR(vreg_mmc));
 		return;
 	}
-	sdcc_gpio_init();
+	swift_sdcc_gpio_init();
 
 #ifdef CONFIG_MMC_MSM_SDC1_SUPPORT
 	msm_add_sdcc(1, &msm7x2x_sdcc_data);
@@ -1168,7 +1165,7 @@ static void __init swift_init_mmc(void)
 }
 
 
-static struct msm_pm_platform_data msm7x27_pm_data[MSM_PM_SLEEP_MODE_NR] = {
+static struct msm_pm_platform_data swift_pm_data[MSM_PM_SLEEP_MODE_NR] = {
 	[MSM_PM_SLEEP_MODE_POWER_COLLAPSE].supported = 1,
 	[MSM_PM_SLEEP_MODE_POWER_COLLAPSE].suspend_enabled = 1,
 	[MSM_PM_SLEEP_MODE_POWER_COLLAPSE].idle_enabled = 1,
@@ -1234,7 +1231,7 @@ static void __init swift_init_i2c(void)
 	if (gpio_request(96, "i2c_sec_dat"))
 		pr_err("failed to request gpio i2c_sec_dat\n");
 	msm_i2c_pdata.pm_lat =
-		msm7x27_pm_data[MSM_PM_SLEEP_MODE_POWER_COLLAPSE_NO_XO_SHUTDOWN]
+		swift_pm_data[MSM_PM_SLEEP_MODE_POWER_COLLAPSE_NO_XO_SHUTDOWN]
 		.latency;
 	msm_device_i2c.dev.platform_data = &msm_i2c_pdata;
 }
@@ -1266,12 +1263,9 @@ static void __init swift_init(void)
 	if (socinfo_init() < 0)
 		BUG();
 
-	printk("LG GT540 Swift (Optimus) rev is %s\n", swift_rev[system_rev]);
+	printk("LG GT540 Swift (Optimus) Init\n");
 
-	msm7x27_clock_data.max_axi_khz = 200000;
-
-	msm_acpu_clock_init(&msm7x27_clock_data);
-
+	msm_acpu_clock_init(&swift_clock_data);
 
 	/* Initialize the zero page for barriers and cache ops */
 	map_zero_page_strongly_ordered();
@@ -1284,9 +1278,7 @@ static void __init swift_init(void)
 	/* clk_get_max_axi_khz() */
 	kgsl_pdata.max_axi_freq = 160000;
 
-	msm_hsusb_pdata.swfi_latency =
-		msm7x27_pm_data
-		[MSM_PM_SLEEP_MODE_RAMP_DOWN_AND_WAIT_FOR_INTERRUPT].latency;
+	msm_hsusb_pdata.swfi_latency = swift_pm_data[MSM_PM_SLEEP_MODE_RAMP_DOWN_AND_WAIT_FOR_INTERRUPT].latency;
 	msm_device_hsusb_peripheral.dev.platform_data = &msm_hsusb_pdata;
 	msm_device_otg.dev.platform_data = &msm_otg_pdata;
 	msm_device_gadget_peripheral.dev.platform_data = &msm_gadget_pdata;
@@ -1294,17 +1286,17 @@ static void __init swift_init(void)
 	platform_add_devices(devices, ARRAY_SIZE(devices));
 //	msm_camera_add_device();
 	swift_init_i2c();
-	i2c_register_board_info(0, i2c_devices, ARRAY_SIZE(i2c_devices));
+	i2c_register_board_info(0, swift_i2c_devices, ARRAY_SIZE(swift_i2c_devices));
 
 
 	platform_device_register(&keypad_device_swift);
 	
-	msm_fb_add_devices();
+	swift_add_fb_devices();
 	swift_init_mmc();
 
 	swift_init_pmic();
 
-	msm_pm_set_platform_data(msm7x27_pm_data);
+	msm_pm_set_platform_data(swift_pm_data);
 
 	swift_add_btpower_devices();
 

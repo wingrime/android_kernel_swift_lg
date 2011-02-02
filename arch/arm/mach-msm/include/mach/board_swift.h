@@ -17,24 +17,8 @@
 #include <linux/types.h>
 #include <linux/list.h>
 #include <asm/setup.h>
+#include <linux/rfkill.h>
 
-/* board revision information */
-enum {
-	SWIFT_REV_A = 0,
-	SWIFT_REV_B,
-	SWIFT_REV_C,
-	SWIFT_REV_D,
-	SWIFT_REV_E,
-	SWIFT_REV_TOT_NUM,
-};
-
-static char *swift_rev[] = {
-	"Rev.A",
-	"Rev.B",
-	"Rev.C",
-	"Rev.D",
-	"Rev.E",	
-};
 
 /* gpio-i2c related functions */
 void swift_init_gpio_i2c_devices(void);
