@@ -17,5 +17,4 @@ obj-$(CONFIG_FB_MSM_MDDI_SWIFT_PANEL) += mddi_ss_driveric_innotek.o
 obj-y += board-swift-headset.o
 obj-y += board-swift-msm-touch.o 
 #obj-y += board-swift-msm-ts.o
-obj-y += board-lge-measure-perf.o
 obj-y+= board-swift-bt.o
