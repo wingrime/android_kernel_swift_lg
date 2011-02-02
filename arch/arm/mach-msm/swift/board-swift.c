@@ -58,7 +58,6 @@
 #include <linux/power_supply.h>
 #include <mach/msm_battery.h>
 #endif /*CONFIG_BATTERY_MSM*/
-#include "lge_charging_table.h"
 
 #include <mach/board_swift.h>
 
@@ -321,16 +320,16 @@ static struct snd_endpoint snd_endpoints_list[] = {
 };
 #undef SND
 
-static struct msm_snd_endpoints msm_device_snd_endpoints = {
+static struct msm_snd_endpoints swift_device_snd_endpoints = {
 	.endpoints = snd_endpoints_list,
 	.num = sizeof(snd_endpoints_list) / sizeof(struct snd_endpoint)
 };
 
-static struct platform_device msm_device_snd = {
+static struct platform_device swift_device_snd = {
 	.name = "msm_snd",
 	.id = -1,
 	.dev    = {
-		.platform_data = &msm_device_snd_endpoints
+		.platform_data = &swift_device_snd_endpoints
 	},
 };
 
@@ -481,7 +480,7 @@ static struct platform_device android_pmem_kernel_ebi1_device = {
 	.dev = { .platform_data = &android_pmem_kernel_ebi1_pdata },
 };
 
-static struct platform_device msm_pmic_keyled = {
+static struct platform_device swift_pmic_keyled = {
 	.name = "pmic-led0",
 };
 
@@ -491,64 +490,37 @@ static struct platform_device lge_battery = {
 };
 #endif
 #ifdef CONFIG_BATTERY_MSM
-static u32 msm_calculate_batt_capacity(u32 current_voltage);
-u32 calculate_capacity(u32 v);
+static u32 swift_calculate_batt_capacity(u32 current_voltage);
 
-static struct msm_psy_batt_pdata msm_psy_batt_data = {
+static struct msm_psy_batt_pdata swift_psy_batt_data = {
 	.voltage_min_design 	= 3200,
-	.voltage_max_design	= 4300,
+	.voltage_max_design	= 4200,
 	.avail_chg_sources   	= AC_CHG | USB_CHG ,
 	.batt_technology        = POWER_SUPPLY_TECHNOLOGY_LION,
-	.calculate_capacity	= &msm_calculate_batt_capacity,
+	.calculate_capacity	= &swift_calculate_batt_capacity,
 };
-#if 0 //original code
- u32 msm_calculate_batt_capacity(u32 current_voltage)
-{
-	u32 low_voltage   = msm_psy_batt_data.voltage_min_design;
-	u32 high_voltage  = msm_psy_batt_data.voltage_max_design;
 
-	return (current_voltage - low_voltage) * 100
-		/ (high_voltage - low_voltage);
-}
-#else
- u32 calculate_capacity(u32 v)
+static  u32 swift_calculate_batt_capacity(u32 current_voltage)
 {
-	int i;
-	u32 cap = 0;
-	
-	printk("%s: batt_vol=%d\n",__func__,v);
-	for(i=0;i<ARRAY_SIZE(tbl);i++){
-		if(v<=3200){
-			cap=0;
-			break;
-		}
-		if(v>=4198){
-			cap=100;
-			break;
-		}
-		if(v>=tbl[i].vol){
-			if(i==(ARRAY_SIZE(tbl)-1)){
-				cap=99;
-				break;
-			}
-			continue;
-		}
-		cap=tbl[i].capacity;
-		break;
-	}
-	printk("%s: capacity=%d\n",__func__,cap);
-
-	return cap;
+	u32 low_voltage   = swift_psy_batt_data.voltage_min_design;
+	u32 high_voltage  = swift_psy_batt_data.voltage_max_design;
+	u32 cap = 0 ;
+	printk(KERN_INFO "Current Battary Voltage  = %d\n ",current_voltage);
+	if (current_voltage >= 4190) 
+	  return 100;
+	else if (current_voltage <= 3200)
+	  return 0;
+	else 
+	  { 
+	    cap =  (current_voltage - low_voltage) * 100 / (high_voltage - low_voltage);
+	    cap = cap +  (5 - cap % 5 ); 
+	    return  cap;
+	  }
 }
-static u32 msm_calculate_batt_capacity(u32 current_voltage)
-{
-	return calculate_capacity(current_voltage);
-}
-#endif
-static struct platform_device msm_batt_device = {
+static struct platform_device swift_batt_device = {
 	.name 		    = "msm-battery",
 	.id		    = -1,
-	.dev.platform_data  = &msm_psy_batt_data,
+	.dev.platform_data  = &swift_psy_batt_data,
 };
 #endif
 static struct platform_device hs_device = {
@@ -559,13 +531,13 @@ static struct platform_device hs_device = {
    },
 };
 
-static struct resource msm_fb_resources[] = {
+static struct resource swift_fb_resources[] = {
 	{
 		.flags  = IORESOURCE_DMA,
 	}
 };
 
-static int msm_fb_detect_panel(const char *name)
+static int swift_fb_detect_panel(const char *name)
 {
 	int ret = -EPERM;
 
@@ -576,18 +548,18 @@ static int msm_fb_detect_panel(const char *name)
 	return ret;
 }
 
-static struct msm_fb_platform_data msm_fb_pdata = {
-	.detect_client = msm_fb_detect_panel,
+static struct msm_fb_platform_data swift_fb_pdata = {
+	.detect_client = swift_fb_detect_panel,
 	.mddi_prescan = 1,
 };
 
-static struct platform_device msm_fb_device = {
+static struct platform_device swift_fb_device = {
 	.name   = "msm_fb",
 	.id     = 0,
-	.num_resources  = ARRAY_SIZE(msm_fb_resources),
-	.resource       = msm_fb_resources,
+	.num_resources  = ARRAY_SIZE(swift_fb_resources),
+	.resource       = swift_fb_resources,
 	.dev    = {
-		.platform_data = &msm_fb_pdata,
+		.platform_data = &swift_fb_pdata,
 	}
 };
 
@@ -616,7 +588,7 @@ static struct resource kgsl_resources[] = {
 
 static struct kgsl_platform_data kgsl_pdata;
 
-static struct platform_device msm_device_kgsl = {
+static struct platform_device swift_device_kgsl = {
 	.name = "kgsl",
 	.id = -1,
 	.num_resources = ARRAY_SIZE(kgsl_resources),
@@ -716,7 +688,7 @@ static void config_camera_off_gpios(void)
 		ARRAY_SIZE(camera_off_gpio_table));
 }
 
-static struct msm_camera_device_platform_data msm_camera_device_data = {
+static struct msm_camera_device_platform_data swift_camera_device_data = {
 	.camera_gpio_on  = config_camera_on_gpios,
 	.camera_gpio_off = config_camera_off_gpios,
 	.ioext.mdcphy = MSM_MDC_PHYS,
@@ -727,28 +699,28 @@ static struct msm_camera_device_platform_data msm_camera_device_data = {
 
 #ifdef CONFIG_ISX005
 
-static struct msm_camera_sensor_flash_src msm_flash_src = {
+static struct msm_camera_sensor_flash_src swift_flash_src = {
 	.flash_sr_type = MSM_CAMERA_FLASH_SRC_PMIC,
 };
 
 static struct msm_camera_sensor_flash_data flash_isx005 = {
 	.flash_type = MSM_CAMERA_FLASH_NONE,
-	.flash_src  = &msm_flash_src
+	.flash_src  = &swift_flash_src
 };
 
-static struct msm_camera_sensor_info msm_camera_sensor_isx005_data = {
+static struct msm_camera_sensor_info swift_camera_sensor_isx005_data = {
 	.sensor_name    = "isx005",
 	.sensor_reset   = 0,
 	.sensor_pwd     = 1,
 //	.vcm_pwd        = 0,
-	.pdata          = &msm_camera_device_data,
+	.pdata          = &swift_camera_device_data,
 	.flash_data     = &flash_isx005
 };
 
-static struct platform_device msm_camera_sensor_isx005 = {
+static struct platform_device swift_camera_sensor_isx005 = {
 	.name      = "msm_camera_isx005",
 	.dev       = {
-		.platform_data = &msm_camera_sensor_isx005_data,
+		.platform_data = &swift_camera_sensor_isx005_data,
 	},
 };
 #endif
@@ -795,29 +767,29 @@ static struct platform_device *devices[] __initdata = {
 	&android_pmem_adsp_device,
 	&android_pmem_audio_device, 
 
-	&msm_fb_device,
+	&swift_fb_device,
 	&msm_device_uart_dm1,
-        &msm_device_snd,
+        &swift_device_snd,
 	&msm_device_adspdec,
-	&msm_device_kgsl,
+	&swift_device_kgsl,
 /* msm-handsetn platform deivce reigistration, kenobi */
    &hs_device,
     /* add swift specific devices at following lines*/
-	&msm_pmic_keyled,
+	&swift_pmic_keyled,
 
 #ifdef CONFIG_SWIFT_BATTERY_STUB
 	&lge_battery,
 #endif
 
 #ifdef CONFIG_BATTERY_MSM
-	&msm_batt_device,
+	&swift_batt_device,
 #endif
 #ifdef CONFIG_ANDROID_RAM_CONSOLE
    &ram_console_device,
 #endif
 
 #ifdef CONFIG_ISX005
-	&msm_camera_sensor_isx005,
+	&swift_camera_sensor_isx005,
 #endif
 	&rt9393_bl,
 	&mddi_ss_driveric_device,		
@@ -1094,13 +1066,13 @@ static struct mmc_platform_data msm7x2x_sdcc_data = {
 #ifdef CONFIG_MMC_MSM_CARD_HW_DETECTION
 	.ocr_mask		= SWIFT_MMC_VDD,
 	.translate_vdd	= swift_sdcc_setup_power,
-	.status 		= swift_sdcc_slot_status, 
+	.status         = swift_sdcc_slot_status, 
 	.status_irq 	= MSM_GPIO_TO_INT(GPIO_MMC_CD_COVER),	
 
-	.irq_flags		= IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+	.irq_flags	=  IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
 	.mmc_bus_width	= MMC_CAP_4_BIT_DATA,
 #else
-	.ocr_mask		= MMC_VDD_28_29,
+	.ocr_mask	= MMC_VDD_28_29,
 	.translate_vdd	= swift_sdcc_setup_power,
 	.mmc_bus_width  = MMC_CAP_4_BIT_DATA,
 #endif	
@@ -1196,7 +1168,7 @@ static void swift_i2c_gpio_config(int iface, int config_type)
 	}
 }
 
-static struct msm_i2c_platform_data msm_i2c_pdata = {
+static struct msm_i2c_platform_data swift_i2c_pdata = {
 	.clk_freq = 400000,
 	.rmutex = 0,
 	.pri_clk = 60,
@@ -1216,10 +1188,8 @@ static void __init swift_init_i2c(void)
 		pr_err("failed to request gpio i2c_sec_clk\n");
 	if (gpio_request(96, "i2c_sec_dat"))
 		pr_err("failed to request gpio i2c_sec_dat\n");
-	msm_i2c_pdata.pm_lat =
-		swift_pm_data[MSM_PM_SLEEP_MODE_POWER_COLLAPSE_NO_XO_SHUTDOWN]
-		.latency;
-	msm_device_i2c.dev.platform_data = &msm_i2c_pdata;
+	swift_i2c_pdata.pm_lat = swift_pm_data[MSM_PM_SLEEP_MODE_POWER_COLLAPSE_NO_XO_SHUTDOWN].latency;
+	msm_device_i2c.dev.platform_data = &swift_i2c_pdata;
 }
 
 static void swift_init_pmic(void) 
@@ -1379,8 +1349,8 @@ static void __init swift_allocate_memory_regions(void)
 
 	size = fb_size ? : MSM_FB_SIZE;
 	addr = alloc_bootmem(size);
-	msm_fb_resources[0].start = __pa(addr);
-	msm_fb_resources[0].end = msm_fb_resources[0].start + size - 1;
+	swift_fb_resources[0].start = __pa(addr);
+	swift_fb_resources[0].end = swift_fb_resources[0].start + size - 1;
 	pr_info("allocating %lu bytes at %p (%lx physical) for fb\n",
 		size, addr, __pa(addr));
 	
