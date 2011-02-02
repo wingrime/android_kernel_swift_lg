@@ -308,30 +308,16 @@ static struct msm_hsusb_gadget_platform_data msm_gadget_pdata = {
 
 #define SND(desc, num) { .name = #desc, .id = num }
 static struct snd_endpoint snd_endpoints_list[] = {
-
-	SND(HANDSET, 0),
-	SND(HEADSET_STEREO_AUDIO, 2),//31
-	SND(TTY_HEADSET, 2),				// alohag
-	SND(HEADSET_STEREO, 2),
-	SND(HEADSET, 2),					// alohag
-	SND(HEADSET_LOOPBACK, 3),		// alohag
-	SND(SPEAKER_PHONE, 6),
-	SND(SPEAKER_IN_CALL, 6),			// alohag
-	SND(SPEAKER_AUDIO, 5),
-	SND(SPEAKER, 5),					// alohag
-	SND(SPEAKER_RING, 5),			// alohag
-	SND(TTY_VCO, 5),					// alohag
-	SND(TTY_HCO, 5),					// alohag
-	SND(HEADSET_AND_SPEAKER, 7),
-	SND(VOICE_RECORDER, 8),
-	SND(FM_RADIO_HEADSET_MEDIA, 9),
-	SND(FM_HEADSET, 9),				// alohag
-	SND(FM_RADIO_SPEAKER_MEDIA, 10),
-	SND(FM_SPEAKER, 10),				// alohag
-	SND(BT, 12),
-	SND(BT_A2DP, 11),//20
-	SND(CURRENT, 35),	
-
+       SND(HANDSET, 0),
+       SND(HEADSET, 2), 
+       SND(CURRENT, 35),
+       SND(SPEAKER, 5),
+       SND(FM_RADIO_HEADSET, 9),
+       SND(FM_RADIO_SPEAKER, 10), 
+       SND(BT, 12),
+       SND(IN_S_SADC_OUT_HANDSET, 3),
+       SND(IN_S_SADC_OUT_SPEAKER_PHONE, 6),
+       SND(HEADSET_AND_SPEAKER, 7),
 };
 #undef SND
 
