@@ -493,7 +493,7 @@ static struct platform_device lge_battery = {
 static u32 swift_calculate_batt_capacity(u32 current_voltage);
 
 static struct msm_psy_batt_pdata swift_psy_batt_data = {
-	.voltage_min_design 	= 3200,
+	.voltage_min_design 	= 2900,
 	.voltage_max_design	= 4200,
 	.avail_chg_sources   	= AC_CHG | USB_CHG ,
 	.batt_technology        = POWER_SUPPLY_TECHNOLOGY_LION,
@@ -508,7 +508,7 @@ static  u32 swift_calculate_batt_capacity(u32 current_voltage)
 	printk(KERN_INFO "Current Battary Voltage  = %d\n ",current_voltage);
 	if (current_voltage >= 4190) 
 	  return 100;
-	else if (current_voltage <= 3200)
+	else if (current_voltage <= 2900)
 	  return 0;
 	else 
 	  { 
